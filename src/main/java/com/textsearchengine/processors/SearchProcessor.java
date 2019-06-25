@@ -4,6 +4,7 @@ package com.textsearchengine.processors;
 import com.textsearchengine.structure.TextSearchResult;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -16,10 +17,10 @@ import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 
 public class SearchProcessor {
-    private final Map<String, String> wordsInMemory;
+    private final Map<String, List<String>> wordsInMemory;
     private final int maxResults;
 
-    public SearchProcessor(Map<String, String> wordsInMemory, int maxResults) {
+    public SearchProcessor(Map<String, List<String>> wordsInMemory, int maxResults) {
         this.wordsInMemory = wordsInMemory;
         this.maxResults = maxResults;
     }
@@ -27,7 +28,7 @@ public class SearchProcessor {
     /**
      * Performs the call to the appropriate methods to apply the search words
      * on the @wordsInMemory Object. It searches the words, obtains the results,
-     * sorts and limits the results, obtains the results objects and prints it
+     * sorts and limits the results, obtains the results objects and prints it.
      *
      * @param inputLine
      */
@@ -42,10 +43,11 @@ public class SearchProcessor {
     }
 
     /**
-     * Iterates through the searched words, obtains the total list of filenames matching the input words
-     * and then collects the results grouping them as a Map in which the key is they filename and the value
-     * is the number of matched words made by this file.
-     *
+     * Iterates through the searched words, obtains the total list of filenames
+     * matching the input words and then collects the results grouping them as a
+     * Map in which the key is they filename and the value is the number of matched
+     * words made by this file.
+     * <p>
      * The process includes the conversion to upper case of the words.
      *
      * @param inputWords
@@ -56,14 +58,13 @@ public class SearchProcessor {
                 .map(word -> word.toUpperCase()) //Convert to upper case
                 .map(word -> wordsInMemory.get(word)) //Get value for this key in wordsInMemory object
                 .filter(Objects::nonNull) //Filter words not found in wordsInMemory keys
-                .map(files -> files.split("\\|")) //Split by "|" the filenames
-                .flatMap(Arrays::stream) //Flatten object obtaining a stream of Strings
+                .flatMap(Collection::stream) //Flatten object obtaining a stream of Strings
                 .collect(groupingBy(Function.identity(), counting())); //Collect and group obtaining a Map of {filename}:{matched words}
         return wordFileMatchingMap;
     }
 
     /**
-     * Sorts and limits the Map of {filename}:{matched words}
+     * Sorts and limits the Map of {filename}:{matched words}.
      *
      * @param map
      * @param maxEntries
@@ -97,7 +98,7 @@ public class SearchProcessor {
     public void printResults(List<TextSearchResult> textSearchResultList) {
         if (!textSearchResultList.isEmpty()) {
             textSearchResultList.stream().forEach(System.out::println);
-        }else{
+        } else {
             System.out.println("no matches found");
         }
     }

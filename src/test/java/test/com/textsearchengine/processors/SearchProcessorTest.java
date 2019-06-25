@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -17,11 +18,12 @@ public class SearchProcessorTest {
 
     @Before
     public void setUp() {
-        Map<String, String> wordsInMemory = new HashMap();
-        wordsInMemory.put("first", "filename1");
-        wordsInMemory.put("second", "filename2");
-        wordsInMemory.put("third", "filename3");
-        wordsInMemory.put("filename", "filename1|filename2|filename3");
+        Map<String, List<String>> wordsInMemory = new HashMap();
+        //Note: add words in upper case to wordsInMemory map as SearchProcessor searches for upper case words
+        wordsInMemory.put("FIRST", Arrays.asList("filename1"));
+        wordsInMemory.put("SECOND", Arrays.asList("filename2"));
+        wordsInMemory.put("THIRD", Arrays.asList("filename3"));
+        wordsInMemory.put("FILENAME", Arrays.asList("filename1", "filename2", "filename3"));
 
         searchProcessor = new SearchProcessor(wordsInMemory, 3);
     }
@@ -33,9 +35,10 @@ public class SearchProcessorTest {
     @Test
     public void searchInputWordsOnWordsInMemory() {
         String[] inputWords = "first filename".split("\\W+");
-        Map<String, Long> searchResult = searchProcessor.searchInputWordsOnWordsInMemory(inputWords);
-        Assert.assertEquals(3, searchResult.size());
 
+        Map<String, Long> searchResult = searchProcessor.searchInputWordsOnWordsInMemory(inputWords);
+
+        Assert.assertEquals(3, searchResult.size());
         Assert.assertEquals(2L, (long) searchResult.get("filename1"));
         Assert.assertEquals(1L, (long) searchResult.get("filename2"));
         Assert.assertEquals(1L, (long) searchResult.get("filename3"));
@@ -44,8 +47,8 @@ public class SearchProcessorTest {
 
     @Test
     public void sortAndLimitMap() {
-        Map<String, Long> unorderedMap = new LinkedHashMap();
         int maxEntries = 2;
+        Map<String, Long> unorderedMap = new LinkedHashMap();
         unorderedMap.put("file_with_2_matches", 2L);
         unorderedMap.put("file_with_1_match", 1L);
         unorderedMap.put("file_with_3_matches", 3L);
@@ -60,8 +63,8 @@ public class SearchProcessorTest {
 
     @Test
     public void getResultsFromMap() {
-        Map<String, Long> orderedMap = new LinkedHashMap();
         int totalWords = 3;
+        Map<String, Long> orderedMap = new LinkedHashMap();
         orderedMap.put("file_with_3_matches", 3L);
         orderedMap.put("file_with_2_matches", 2L);
         orderedMap.put("file_with_1_match", 1L);
