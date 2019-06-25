@@ -1,0 +1,64 @@
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# IntelliJ #
+*.iml
+.idea/*
+*/.idea/*
+
+# Maven #
+**/target/*
+target/*
+
+
+# Eclipse #
+.metadata
+
+bin/
+
+tmp/
+
+*.tmp
+
+*.bak
+
+*.swp
+
+*~.nib
+
+local.properties
+
+.settings/
+
+.loadpath
+
+.recommenders
+
+# Eclipse Core
+
+.project
+
+# External tool builders
+
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+
+*.launch
+
+# JDT-specific (Eclipse Java Development Tools)
+
+.classpath
+
+# STS (Spring Tool Suite)
+
+.springBeans
+
+.factorypath
+
+# visual studio code
+.history/
