@@ -29,7 +29,7 @@ public class Main {
         while (true) {
             System.out.print("search>");
             String inputLine = scanner.nextLine();
-            if (inputLine.equals("!exit")) {
+            if (inputLine.equals(":quit")) {
                 return;
             }
             searchProcessor.searchAndPrint(inputLine);

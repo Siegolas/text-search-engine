@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -34,13 +35,20 @@ public class FileProcessor {
      */
     public Map<String, List<String>> processFilesInPath() {
         try {
-            return Files.walk(Paths.get(path))
+            final AtomicInteger fileCounter = new AtomicInteger(0);
+            final AtomicInteger wordCounter = new AtomicInteger(0);
+            Map<String, List<String>> mapWordFiles = Files.walk(Paths.get(path))
                     .filter(path -> !Files.isDirectory(path))
+                    .peek(file -> fileCounter.incrementAndGet())
                     .sorted(Comparator.comparing(path -> path.getFileName()))
                     .map(this::fileToMemory)
                     .flatMap(Collection::stream) //Convert from Stream<List<WordInFile>> to Stream<WordInFile>
                     .filter(element -> !element.getWord().isEmpty()) //Removes WordInFile with empty word
+                    .peek(word -> wordCounter.incrementAndGet())
                     .collect(toMap(WordInMemory::getWord, WordInMemory::getFilenameList, this::mergeFunctionForSameKeyInMap)); //Converts Stream<WordInFile> to Map<String, List<String>>
+            System.out.println(fileCounter + " files read in directory " + path);
+            System.out.println(wordCounter + " words were found ");
+            return mapWordFiles;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

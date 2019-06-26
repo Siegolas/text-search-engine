@@ -2,6 +2,7 @@
 
 ## Table of contents
 * [General info](#general-info)
+* [Behavioral considerations](#behavioral-considerations)
 * [Getting Started](#getting-started)
 * [Prerequisites](#prerequisites)
 * [Build the project](#build-the-project)
@@ -14,7 +15,19 @@
 
 ## General info
 
-Text Search Engine that allows to search words contained by the files located under a specified path. The application reads all the text files in the given directory, building an in memory representation of the files and their contents, and then give a command prompt at which interactive searches can be performed. 
+Text Search Engine that allows to search words contained by the files located under a specified path. The application reads all the text files in the given directory, building an in memory representation of the files and their contents, and then give a command prompt at which interactive searches can be performed.
+
+## Behavioral considerations
+
+In the first phase of the execution, all the files that are under the path specified by argument are searched, discarding the directories. For each of the files, its lines are traversed, and for each word a representation is obtained in memory of the word and the name of file in which it appears. This process prints by console the number of files that are read as well as the total number of words found. 
+
+Once the representation in memory of the words and their occurrences in the files has been obtained, the program shows the search terminal. The user can then enter the words he wants to search and press ENTER to start the search. If occurrences are found, the list of files that have had occurrences is shown along with the percentage of occurrences for each one of them. If there has been no occurrence in any file the output shows 'no occurrences were found'
+
+I have taken the following considerations regarding the operation of the program:
+
+- Case-insensitive behavior: The words of the files are converted to uppercase before passing them to the memory structure. The words that the user introduces are converted to uppercase before performing the search
+-If a file doesn't have any match, it will not appear in the list of results
+-The list of results is limited to a maximum quantity. It is stated by the variable MAX_NUMBER_OF_RESULTS found in the Constants class
  
 ## Getting Started
 
@@ -24,11 +37,9 @@ These instructions will get you a copy of the project up and running on your loc
 
 This project requires the following prerequisites:
 
-```
-- Java 8+: Install [Java JDK](https://openjdk.java.net/install/) version 8 or higher.
-- Maven: Install [Apache Maven](https://maven.apache.org/download.cgi) version 3 or higher
-- Git: Install [git](https://git-scm.com/downloads)
-```
+- Java: Install [Java JDK](https://openjdk.java.net/install/) version 8 or higher.
+- Maven: Install [Maven](https://maven.apache.org/download.cgi) version 3 or higher
+- Git: Install [Git](https://git-scm.com/downloads)
 
 ### Build the project
 
@@ -57,15 +68,22 @@ It also can be executed by Maven with this command:
 As an example, execute this command:
 
 ```
-mvn exec:java -Dexec.args="src/main/resources/files" 
+java -jar target/text-search-engine-1.0.0.jar src/main/resources/files 
 ```
 
-The file processor will iterate through the files contained under the path 'src/main/resources/files' and will obtain an in memory representation of the words appearances in the files. Then it shows the text 'search>' indicating that the user can introduce words to search in the 'in-memory' structure.
+The file processor will iterate through the files contained under the path 'src/main/resources/files' and will obtain an in memory representation of the words appearances in the files. It outputs the number of files that are read as well as the total number of words found:
+
+```
+3 files read in directory src/main/resources/files
+9 words were found
+```
+
+Then it shows the text 'search>' indicating that the user can introduce words to search in the 'in-memory' structure.
 
 Example of use, write 'first file' and press ENTER:
 
 ```
-search>first file
+search>first file word
 ```
 
 Then, the search processor performs the search and presents the results,
@@ -73,8 +91,17 @@ showing the percentage of match for the files that received matches in the searc
 
 ```
 src/main/resources/files/filename1 : 100.0%
-src/main/resources/files/filename3 : 50.0%
-src/main/resources/files/filename2 : 50.0%
+src/main/resources/files/filename3 : 66.66667%
+src/main/resources/files/filename2 : 66.66667%
+```
+
+Another example of use:
+
+```
+search>cthulu first word
+src/main/resources/files/filename1 : 66.66667%
+src/main/resources/files/filename3 : 33.333336%
+src/main/resources/files/filename2 : 33.333336%
 ```
 
 The next fragment shows a search with no match at all:
@@ -84,17 +111,23 @@ search>Cthulhu
 no matches found
 ```
 
+To exit the program, type ':quit':
+
+```
+search>:quit
+```
+
 ## Running the tests
 
 Each method contained in the Services of this project has a Junit test. In order to execute the tests execute the following command:
 
 ```
-- Execute the tests: mvn test
+- mvn test
 ```
 
 ### Test purpose
 
-For the development of this project, the tests have been taken into account from the beginning. Therefore, every small functionality within the file processing algorithm or the search algorithm has been programmed as an independent method. This has made it possible to test each of the small functionalities in an isolated way, being able to test it in detail.
+For the development of this project, the tests have been taken into account from the beginning. Therefore, every small functionality within the file processing algorithm or the search processing algorithm has been programmed as an independent method. This has made it possible to test each of the small functionalities in an isolated way, being able to test it in detail.
 
 ## Built With
 
