@@ -15,7 +15,7 @@
 
 ## General info
 
-Text Search Engine that allows to search words contained by the files located under a specified path. The application reads all the text files in the given directory, building an in memory representation of the files and their contents, and then give a command prompt at which interactive searches can be performed.
+Text Search Engine that allows to search words contained by the files located under a specified path. The application reads all the text files in the given directory, building an in memory representation of the files and their contents, and then shows a command prompt at which interactive searches can be performed.
 
 ## Behavioral considerations
 
