@@ -91,8 +91,8 @@ showing the percentage of match for the files that received matches in the searc
 
 ```
 src/main/resources/files/filename1 : 100.0%
-src/main/resources/files/filename3 : 66.66667%
 src/main/resources/files/filename2 : 66.66667%
+src/main/resources/files/filename3 : 66.66667%
 ```
 
 Another example of use:
@@ -100,8 +100,8 @@ Another example of use:
 ```
 search>cthulu first word
 src/main/resources/files/filename1 : 66.66667%
-src/main/resources/files/filename3 : 33.333336%
 src/main/resources/files/filename2 : 33.333336%
+src/main/resources/files/filename3 : 33.333336%
 ```
 
 The next fragment shows a search with no match at all:

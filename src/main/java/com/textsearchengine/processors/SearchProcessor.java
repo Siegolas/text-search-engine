@@ -73,7 +73,7 @@ public class SearchProcessor {
     public Map<String, Long> sortAndLimitMap(Map<String, Long> map, int maxEntries) {
         return map.entrySet()
                 .stream()
-                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue())) //Sort by {matched words} in descendant order
+                .sorted(Collections.reverseOrder(Map.Entry.<String, Long>comparingByValue()).thenComparing(Map.Entry.comparingByKey())) //Sort by {matched words} in descendant order, then by {key} in ascendant order
                 .limit(maxEntries) //Limit the quantity of entries
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
                         (oldValue, newValue) -> oldValue, LinkedHashMap::new)); //Collect as a LinkedHashMap to preserve order
